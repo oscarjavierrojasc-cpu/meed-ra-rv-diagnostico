@@ -82,8 +82,8 @@
     /* Mural: tarjetas que revelan su cita al pasar el mouse o hacer clic */
     .panel { cursor:pointer; transition:transform .3s, border-color .3s, box-shadow .3s; }
     .panel:hover, .panel.open { transform:translateY(-6px); border-color:rgba(236,72,153,.55); box-shadow:0 40px 70px -24px rgba(236,72,153,.35); }
-    .panel .pq { max-height:0; opacity:0; overflow:hidden; transition:max-height .45s, opacity .45s, margin .45s; }
-    .panel:hover .pq, .panel.open .pq { max-height:160px; opacity:1; margin-top:14px; }
+    .panel .pq { margin-top:auto; padding-top:16px; border-top:1px solid rgba(255,255,255,.08); opacity:.55; transition:opacity .35s; }
+    .panel:hover .pq, .panel.open .pq { opacity:1; }
 
     /* ===== CHROME ===== */
     #hdr { position:absolute; top:0; left:0; right:0; height:112px; padding:0 110px; display:flex; align-items:center; justify-content:space-between; z-index:20;
@@ -108,7 +108,7 @@
                width:1920px !important; height:1080px !important; overflow:hidden !important; break-after:page; page-break-after:always; }
       .slide .rv { opacity:1 !important; transform:none !important; transition:none !important; }
       .bar-fill { width:var(--w) !important; transition:none !important; }
-      .panel .pq { max-height:160px !important; opacity:1 !important; margin-top:14px !important; }
+      .panel .pq { opacity:1 !important; }
       .print-brand { display:flex !important; position:absolute; top:0; left:0; right:0; height:112px; padding:0 110px; align-items:center; justify-content:space-between; z-index:5; border-bottom:1px solid rgba(255,255,255,.07); }
       .float, .pulse-dot, .spin-slow { animation:none !important; }
     }
@@ -422,7 +422,7 @@
         <span class="chip bg-fuchsia-500/15 border border-fuchsia-500/40 text-fuchsia-200"><i data-lucide="layout-grid" class="w-5 h-5"></i> Diagnóstico visual</span>
         <h2 class="t-h1 mt-4 !text-[54px]">El diagnóstico <span class="g-violet">en un vistazo</span></h2>
       </div>
-      <p class="t-sm flex items-center gap-2"><i data-lucide="mouse-pointer-click" class="w-5 h-5 text-purple-300"></i> Pasá el mouse o hacé clic en cada panel para ver la cita</p>
+      <p class="t-sm flex items-center gap-2"><i data-lucide="mouse-pointer-click" class="w-5 h-5 text-purple-300"></i> Pasá el mouse o hacé clic en cada panel para resaltar la cita</p>
     </div>
     <div class="grid grid-cols-3 grid-rows-2 gap-6 flex-1">
       <div class="panel glass p-7 flex flex-col gap-3 rv d1">
