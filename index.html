@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RA y RV en el aula: entre el potencial y las condiciones · Baumann & Rojas · MEED</title>
+  <meta name="description" content="Diagnóstico visual a partir de entrevistas a tres docentes sobre Realidad Aumentada y Realidad Virtual. Actividad Final Integradora, Recursos Digitales II, Maestría en Enseñanza en Escenarios Digitales.">
+  <meta name="robots" content="noindex">
+  <script src="vendor/tailwind.js"></script>
+  <script src="vendor/lucide.min.js"></script>
+  <style>
+    /* Tipografías autoalojadas (sin dependencia de CDN en la presentación) */
+    @font-face { font-family:'Jakarta'; src:url('vendor/jakarta-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'Jakarta'; src:url('vendor/jakarta-500.woff2') format('woff2'); font-weight:500; font-display:swap; }
+    @font-face { font-family:'Jakarta'; src:url('vendor/jakarta-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+    @font-face { font-family:'Jakarta'; src:url('vendor/jakarta-800.woff2') format('woff2'); font-weight:800; font-display:swap; }
+    @font-face { font-family:'InterL'; src:url('vendor/inter-400.woff2') format('woff2'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'InterL'; src:url('vendor/inter-400i.woff2') format('woff2'); font-weight:400; font-style:italic; font-display:swap; }
+    @font-face { font-family:'InterL'; src:url('vendor/inter-600.woff2') format('woff2'); font-weight:600; font-display:swap; }
+    @font-face { font-family:'InterL'; src:url('vendor/inter-700.woff2') format('woff2'); font-weight:700; font-display:swap; }
+
+    html, body { margin:0; height:100%; background:#05040A; overflow:hidden; }
+    body { font-family:'InterL', system-ui, sans-serif; color:#FFFFFE; -webkit-font-smoothing:antialiased; user-select:none; }
+    .gs, h1, h2, h3, h4, button { font-family:'Jakarta', system-ui, sans-serif; letter-spacing:-0.015em; }
+
+    /* ===== LIENZO 1920×1080 ESCALADO ===== */
+    #stage { position:absolute; left:50%; top:50%; width:1920px; height:1080px; transform-origin:center center;
+             background:#0B0A12; overflow:hidden; box-shadow:0 0 120px rgba(0,0,0,.8); }
+    .slide { position:absolute; inset:0; padding:150px 110px 120px; display:flex; opacity:0; visibility:hidden;
+             transform:translateY(18px) scale(.985); transition:opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1), visibility .5s;
+             background:
+               radial-gradient(900px 600px at 0% 0%, rgba(168,85,247,.16), transparent 60%),
+               radial-gradient(900px 600px at 100% 100%, rgba(6,182,212,.13), transparent 60%),
+               #0B0A12; }
+    .slide::before { content:''; position:absolute; inset:0; pointer-events:none;
+             background-image:linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px);
+             background-size:64px 64px; mask-image:radial-gradient(ellipse at center, #000 30%, transparent 80%); }
+    .slide > * { position:relative; z-index:1; }
+    .slide.active { opacity:1; visibility:visible; transform:none; }
+
+    /* Aparición escalonada de elementos dentro de la lámina */
+    .slide .rv { opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+    .slide.active .rv { opacity:1; transform:none; }
+    .slide.active .rv.d1 { transition-delay:.12s } .slide.active .rv.d2 { transition-delay:.24s } .slide.active .rv.d3 { transition-delay:.36s }
+    .slide.active .rv.d4 { transition-delay:.48s } .slide.active .rv.d5 { transition-delay:.6s }  .slide.active .rv.d6 { transition-delay:.72s }
+
+    /* ===== ESCALA TIPOGRÁFICA ===== */
+    .t-kick { font-family:'Jakarta'; font-size:19px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+    .t-hero { font-family:'Jakarta'; font-size:88px; font-weight:800; line-height:1.02; letter-spacing:-0.04em; }
+    .t-h1   { font-family:'Jakarta'; font-size:62px; font-weight:800; line-height:1.06; letter-spacing:-0.035em; }
+    .t-h3   { font-family:'Jakarta'; font-size:31px; font-weight:700; line-height:1.18; letter-spacing:-0.02em; }
+    .t-h4   { font-family:'Jakarta'; font-size:25px; font-weight:700; line-height:1.25; }
+    .t-lead { font-size:27px; line-height:1.45; color:#CBD5E1; }
+    .t-body { font-size:22px; line-height:1.5; color:#CBD5E1; }
+    .t-sm   { font-size:19px; line-height:1.45; color:#94A3B8; }
+    .t-quote{ font-family:'InterL'; font-style:italic; font-size:26px; line-height:1.42; color:#F1F5F9; }
+
+    .g-violet { background:linear-gradient(120deg,#C084FC 0%,#EC4899 55%,#22D3EE 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .g-gold   { background:linear-gradient(120deg,#FDE68A 0%,#F59E0B 50%,#F472B6 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .g-cyan   { background:linear-gradient(120deg,#67E8F9 0%,#38BDF8 50%,#A78BFA 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .g-emer   { background:linear-gradient(120deg,#6EE7B7 0%,#10B981 50%,#22D3EE 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .g-rose   { background:linear-gradient(120deg,#FDA4AF 0%,#F43F5E 50%,#F59E0B 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+
+    .glass { background:linear-gradient(160deg, rgba(30,24,50,.88), rgba(16,13,28,.92)); border:1.5px solid rgba(168,85,247,.22);
+             border-radius:30px; box-shadow:0 30px 60px -20px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06); backdrop-filter:blur(18px); }
+    .chip { display:inline-flex; align-items:center; gap:10px; padding:10px 20px; border-radius:999px; font-family:'Jakarta'; font-weight:700; font-size:18px; letter-spacing:.1em; text-transform:uppercase; }
+    .ico  { width:64px; height:64px; border-radius:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ico svg { width:32px; height:32px; }
+    .num  { width:52px; height:52px; border-radius:16px; display:flex; align-items:center; justify-content:center; font-family:'Jakarta'; font-weight:800; font-size:26px; flex-shrink:0; }
+    .ring { position:absolute; border-radius:50%; border:1.5px solid rgba(192,132,252,.25); }
+    .float { animation:float 6s ease-in-out infinite; } .float.d2 { animation-delay:-2s; } .float.d3 { animation-delay:-4s; }
+    @keyframes float { 50% { transform:translateY(-14px); } }
+    .pulse-dot { animation:pd 1.6s ease-in-out infinite; } @keyframes pd { 50% { opacity:.35; } }
+    .spin-slow { animation:spin 40s linear infinite; } @keyframes spin { to { transform:rotate(360deg); } }
+    .avatar { width:64px; height:64px; border-radius:20px; display:flex; align-items:center; justify-content:center; font-family:'Jakarta'; font-weight:800; font-size:26px; flex-shrink:0; }
+    .qmark { font-family:'Jakarta'; font-weight:800; font-size:120px; line-height:.6; }
+    .cite { font-family:'Jakarta'; font-weight:700; font-size:18px; letter-spacing:.06em; text-transform:uppercase; }
+    .bar-track { height:14px; border-radius:99px; background:rgba(255,255,255,.07); overflow:hidden; }
+    .bar-fill { height:100%; border-radius:99px; width:0; transition:width 1.2s cubic-bezier(.16,1,.3,1) .4s; }
+    .slide.active .bar-fill { width:var(--w); }
+
+    /* Mural: tarjetas que revelan su cita al pasar el mouse o hacer clic */
+    .panel { cursor:pointer; transition:transform .3s, border-color .3s, box-shadow .3s; }
+    .panel:hover, .panel.open { transform:translateY(-6px); border-color:rgba(236,72,153,.55); box-shadow:0 40px 70px -24px rgba(236,72,153,.35); }
+    .panel .pq { max-height:0; opacity:0; overflow:hidden; transition:max-height .45s, opacity .45s, margin .45s; }
+    .panel:hover .pq, .panel.open .pq { max-height:160px; opacity:1; margin-top:14px; }
+
+    /* ===== CHROME ===== */
+    #hdr { position:absolute; top:0; left:0; right:0; height:112px; padding:0 110px; display:flex; align-items:center; justify-content:space-between; z-index:20;
+           border-bottom:1px solid rgba(255,255,255,.07); background:linear-gradient(180deg, rgba(11,10,18,.95), rgba(11,10,18,.6)); }
+    #ftr { position:absolute; bottom:0; left:0; right:0; height:96px; padding:0 110px; display:flex; align-items:center; justify-content:space-between; z-index:20; }
+    #progress { position:absolute; bottom:0; left:0; height:5px; background:linear-gradient(90deg,#A855F7,#EC4899,#22D3EE); transition:width .5s cubic-bezier(.16,1,.3,1); z-index:21; box-shadow:0 0 20px rgba(236,72,153,.6); }
+    .navbtn { width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .2s;
+              background:rgba(88,28,135,.35); border:1.5px solid rgba(168,85,247,.45); color:#E9D5FF; }
+    .navbtn:hover { background:rgba(147,51,234,.5); transform:scale(1.08); }
+    .dot { width:12px; height:12px; border-radius:99px; background:#3F3A55; cursor:pointer; transition:all .3s; }
+    .dot.on { width:40px; background:linear-gradient(90deg,#C084FC,#22D3EE); box-shadow:0 0 14px rgba(192,132,252,.7); }
+    a { color:inherit; }
+    .print-brand { display:none; }
+
+    @media print {
+      @page { size:1920px 1080px; margin:0; }
+      *, *::before, *::after { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+      html, body { overflow:visible !important; height:auto !important; background:#0B0A12 !important; }
+      #stage { position:static !important; transform:none !important; width:1920px !important; height:auto !important; overflow:visible !important; box-shadow:none !important; }
+      #hdr, #ftr, #progress { display:none !important; }
+      .slide { position:relative !important; inset:auto !important; opacity:1 !important; visibility:visible !important; transform:none !important;
+               width:1920px !important; height:1080px !important; overflow:hidden !important; break-after:page; page-break-after:always; }
+      .slide .rv { opacity:1 !important; transform:none !important; transition:none !important; }
+      .bar-fill { width:var(--w) !important; transition:none !important; }
+      .panel .pq { max-height:160px !important; opacity:1 !important; margin-top:14px !important; }
+      .print-brand { display:flex !important; position:absolute; top:0; left:0; right:0; height:112px; padding:0 110px; align-items:center; justify-content:space-between; z-index:5; border-bottom:1px solid rgba(255,255,255,.07); }
+      .float, .pulse-dot, .spin-slow { animation:none !important; }
+    }
+  </style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- HEADER -->
+  <header id="hdr">
+    <div class="flex items-center gap-5">
+      <div class="w-[60px] h-[60px] rounded-[18px] bg-gradient-to-tr from-fuchsia-600 via-purple-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-fuchsia-600/40"><i data-lucide="scan-eye" class="w-8 h-8"></i></div>
+      <div>
+        <div class="gs font-extrabold text-[28px] leading-none">RA &amp; RV en el aula</div>
+        <div class="t-kick !text-[15px] text-fuchsia-400 mt-1.5">MEED · Recursos Digitales II · Actividad Final Integradora</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 bg-purple-950/70 border border-purple-500/40 px-5 py-2.5 rounded-full">
+        <span class="gs font-bold text-[18px] text-purple-100">Luciana Baumann (AR) · Oscar Javier Rojas (CO)</span>
+      </div>
+      <span id="counter" class="gs font-bold text-[21px] tracking-widest text-purple-200 bg-purple-950/70 px-5 py-2.5 rounded-2xl border border-purple-700/50 tabular-nums">01 / 11</span>
+    </div>
+  </header>
+
+  <!-- ============ 1 · PORTADA ============ -->
+  <section class="slide items-center gap-16" data-title="Portada">
+    <div class="flex-1 flex flex-col gap-8">
+      <span class="chip self-start bg-fuchsia-500/15 border border-fuchsia-500/40 text-fuchsia-200 rv"><i data-lucide="radio" class="w-5 h-5 text-fuchsia-400 pulse-dot"></i> Diagnóstico situado · 3 entrevistas docentes</span>
+      <h1 class="t-hero rv d1">Realidad Aumentada<br>y Realidad Virtual<br>en el aula: <span class="g-violet">entre el<br>potencial y las condiciones</span></h1>
+      <p class="t-lead max-w-[960px] rv d2">Qué saben, qué hacen, qué imaginan y qué necesitan tres docentes de primaria, secundaria y nivel superior para enseñar con RA y RV.</p>
+      <div class="flex items-center gap-5 pt-2 rv d3">
+        <div class="flex -space-x-3">
+          <span class="w-14 h-14 rounded-full bg-gradient-to-br from-sky-400 to-indigo-700 border-[3px] border-[#0B0A12] flex items-center justify-center gs font-extrabold text-[22px]">LB</span>
+          <span class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-rose-600 border-[3px] border-[#0B0A12] flex items-center justify-center gs font-extrabold text-[22px]">OR</span>
+        </div>
+        <div><div class="t-h4 !text-[23px]">Luciana Baumann · Oscar Javier Rojas</div><div class="t-sm">Maestría en Enseñanza en Escenarios Digitales · Prof. Dra. Carina Fracchia · 19 de noviembre de 2026</div></div>
+      </div>
+    </div>
+    <!-- Visual: capas real / aumentada / virtual -->
+    <div class="relative w-[620px] h-[760px] flex-shrink-0 flex items-center justify-center rv d2">
+      <div class="ring w-[600px] h-[600px] spin-slow" style="border-style:dashed"></div>
+      <div class="ring w-[440px] h-[440px] !border-cyan-400/30"></div>
+      <div class="absolute w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-fuchsia-600/30 via-purple-600/20 to-cyan-500/25 blur-3xl"></div>
+      <div class="relative w-[300px] h-[300px] rounded-[60px] glass !rounded-[60px] flex flex-col items-center justify-center gap-3 !border-fuchsia-400/40">
+        <i data-lucide="smartphone" class="w-28 h-28 text-fuchsia-300" stroke-width="1.3"></i>
+        <span class="t-kick !text-[16px] text-fuchsia-200">La puerta de entrada</span>
+      </div>
+      <div class="absolute top-[90px] left-[10px] glass !rounded-2xl px-5 py-4 float flex items-center gap-3"><i data-lucide="layers" class="w-8 h-8 text-cyan-300"></i><div><div class="gs text-[26px] font-extrabold g-cyan leading-none">RA</div><div class="t-sm !text-[16px]">complementa lo real</div></div></div>
+      <div class="absolute top-[300px] -right-6 glass !rounded-2xl px-5 py-4 float d2 flex items-center gap-3"><i data-lucide="glasses" class="w-8 h-8 text-fuchsia-300"></i><div><div class="gs text-[26px] font-extrabold g-violet leading-none">RV</div><div class="t-sm !text-[16px]">sumerge en lo simulado</div></div></div>
+      <div class="absolute bottom-[90px] left-[30px] glass !rounded-2xl px-5 py-4 float d3 flex items-center gap-3"><i data-lucide="clock" class="w-8 h-8 text-amber-300"></i><div><div class="gs text-[26px] font-extrabold g-gold leading-none">Tiempo</div><div class="t-sm !text-[16px]">la condición que falta</div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · EL ESTUDIO ============ -->
+  <section class="slide flex-col gap-10" data-title="El estudio">
+    <div class="rv">
+      <span class="chip bg-cyan-500/15 border border-cyan-500/40 text-cyan-200"><i data-lucide="mic" class="w-5 h-5"></i> Entrevista semiestructurada · 7 preguntas · 5 ejes</span>
+      <h2 class="t-h1 mt-5">Tres voces, <span class="g-cyan">tres escenarios</span></h2>
+      <p class="t-lead mt-3 max-w-[1400px]">Guía común para comparar, con preguntas de sondeo para profundizar en cada trayectoria (Díaz-Bravo et al., 2013; Alaminos, 2006).</p>
+    </div>
+    <div class="grid grid-cols-3 gap-8 flex-1">
+      <a href="https://drive.google.com/file/d/16QGvxV6s1PoDmxUzVFG14Dr2JAtudiI7/view?usp=sharing" target="_blank" rel="noopener" class="glass p-9 flex flex-col gap-5 border-t-[6px] !border-t-emerald-400 rv d1 no-underline">
+        <div class="flex items-center justify-between"><div class="avatar bg-emerald-500/20 text-emerald-300">AG</div><span class="chip !text-[15px] !py-2 bg-emerald-950 border border-emerald-700/60 text-emerald-200">Primaria</span></div>
+        <h3 class="t-h3">Alejandra González</h3>
+        <p class="t-body">Maestra de apoyo a la integración · Matemática y Ciencias Naturales</p>
+        <div class="mt-auto flex items-center justify-between t-sm"><span>11 años · Presencial</span><span class="flex items-center gap-2 text-emerald-300 gs font-bold"><i data-lucide="headphones" class="w-5 h-5"></i> 9:19</span></div>
+      </a>
+      <a href="https://drive.google.com/file/d/1rOV0d-P-wEoOxb-4rm65yDYY2K2LWy-B/view?usp=drive_link" target="_blank" rel="noopener" class="glass p-9 flex flex-col gap-5 border-t-[6px] !border-t-cyan-400 rv d2 no-underline">
+        <div class="flex items-center justify-between"><div class="avatar bg-cyan-500/20 text-cyan-300">JH</div><span class="chip !text-[15px] !py-2 bg-cyan-950 border border-cyan-700/60 text-cyan-200">Secundaria · Superior</span></div>
+        <h3 class="t-h3">Jonathan Herrán</h3>
+        <p class="t-body">Física y Práctica Educativa</p>
+        <div class="mt-auto flex items-center justify-between t-sm"><span>5,5 años · Presencial</span><span class="flex items-center gap-2 text-cyan-300 gs font-bold"><i data-lucide="headphones" class="w-5 h-5"></i> 9:59</span></div>
+      </a>
+      <a href="https://drive.google.com/file/d/1jzJuw94wVxi4Hts1RQrBaDj36o-Oafgp/view?usp=drive_link" target="_blank" rel="noopener" class="glass p-9 flex flex-col gap-5 border-t-[6px] !border-t-fuchsia-400 rv d3 no-underline">
+        <div class="flex items-center justify-between"><div class="avatar bg-fuchsia-500/20 text-fuchsia-300">SM</div><span class="chip !text-[15px] !py-2 bg-fuchsia-950 border border-fuchsia-700/60 text-fuchsia-200">Secundaria · Superior</span></div>
+        <h3 class="t-h3">Simón Massa</h3>
+        <p class="t-body">Historia</p>
+        <div class="mt-auto flex items-center justify-between t-sm"><span>6 años · Presencial</span><span class="flex items-center gap-2 text-fuchsia-300 gs font-bold"><i data-lucide="headphones" class="w-5 h-5"></i> 8:57</span></div>
+      </a>
+    </div>
+    <div class="flex items-center gap-4 t-sm rv d4"><i data-lucide="mouse-pointer-click" class="w-5 h-5 text-purple-300"></i> Cada tarjeta enlaza al audio de la entrevista.</div>
+  </section>
+
+  <!-- ============ 3 · ¿QUÉ SABEN? ============ -->
+  <section class="slide flex-col gap-10" data-title="¿Qué saben?">
+    <div class="rv">
+      <span class="chip bg-purple-500/15 border border-purple-500/40 text-purple-200"><span class="gs">01</span> Conocimientos</span>
+      <h2 class="t-h1 mt-5">¿Qué saben? <span class="g-violet">De lo preciso a lo intuitivo</span></h2>
+    </div>
+    <div class="grid grid-cols-[1.1fr_1fr] gap-10 flex-1">
+      <div class="flex flex-col gap-7 justify-center">
+        <div class="glass p-8 flex items-center gap-7 rv d1">
+          <div class="avatar bg-emerald-500/20 text-emerald-300">AG</div>
+          <div class="flex-1"><div class="flex justify-between t-h4 !text-[22px] mb-3"><span>Alejandra</span><span class="t-sm">distingue con claridad</span></div><div class="bar-track"><div class="bar-fill bg-gradient-to-r from-emerald-400 to-cyan-400" style="--w:82%"></div></div></div>
+        </div>
+        <div class="glass p-8 flex items-center gap-7 rv d2">
+          <div class="avatar bg-cyan-500/20 text-cyan-300">JH</div>
+          <div class="flex-1"><div class="flex justify-between t-h4 !text-[22px] mb-3"><span>Jonathan</span><span class="t-sm">distingue con claridad</span></div><div class="bar-track"><div class="bar-fill bg-gradient-to-r from-cyan-400 to-violet-400" style="--w:90%"></div></div></div>
+        </div>
+        <div class="glass p-8 flex items-center gap-7 rv d3">
+          <div class="avatar bg-fuchsia-500/20 text-fuchsia-300">SM</div>
+          <div class="flex-1"><div class="flex justify-between t-h4 !text-[22px] mb-3"><span>Simón</span><span class="t-sm">noción intuitiva de RV · no conoce la RA</span></div><div class="bar-track"><div class="bar-fill bg-gradient-to-r from-fuchsia-400 to-rose-400" style="--w:30%"></div></div></div>
+        </div>
+        <p class="t-sm rv d4">Escala cualitativa e interpretativa del equipo, no es una medición.</p>
+      </div>
+      <div class="flex flex-col gap-7">
+        <div class="glass p-10 rv d2 !border-cyan-400/35">
+          <span class="qmark g-cyan">“</span>
+          <p class="t-quote -mt-4">Una complementa la realidad, mientras que la otra usa ya un entorno virtual.</p>
+          <p class="cite text-cyan-300 mt-5">Jonathan · Física</p>
+        </div>
+        <div class="rounded-[30px] bg-gradient-to-br from-fuchsia-600/25 via-purple-700/20 to-cyan-600/20 border-2 border-fuchsia-400/45 p-9 rv d4">
+          <div class="flex items-center gap-3 t-kick !text-[16px] text-fuchsia-200"><i data-lucide="sparkles" class="w-5 h-5"></i> Hallazgo 1</div>
+          <p class="t-h3 !text-[28px] mt-3">El concepto y la práctica no van juntos: Simón dice no conocer la RA, pero usa <span class="g-gold">QR y videos 360°</span>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4 · ¿QUÉ EXPERIENCIAS? ============ -->
+  <section class="slide flex-col gap-10" data-title="¿Qué experiencias?">
+    <div class="rv">
+      <span class="chip bg-cyan-500/15 border border-cyan-500/40 text-cyan-200"><span class="gs">02</span> Experiencias</span>
+      <h2 class="t-h1 mt-5">Hay <span class="g-cyan">más práctica</span> de la que se nombra</h2>
+    </div>
+    <div class="relative grid grid-cols-3 gap-8">
+      <div class="absolute left-[8%] right-[8%] top-[46px] h-[4px] rounded-full bg-gradient-to-r from-emerald-400 via-cyan-400 to-fuchsia-400 opacity-60"></div>
+      <div class="flex flex-col gap-5 rv d1">
+        <div class="relative w-[92px] h-[92px] rounded-full bg-[#0B0A12] border-4 border-emerald-400 flex items-center justify-center mx-auto"><i data-lucide="book-open" class="w-10 h-10 text-emerald-300"></i></div>
+        <div class="glass p-8 flex flex-col gap-3 h-[300px]">
+          <div class="t-kick !text-[15px] text-emerald-300">Alejandra · Conoce</div>
+          <h3 class="t-h3">Talleres, cursos y videos</h3>
+          <p class="t-body">Todavía no las llevó al aula. En su escuela nadie trabaja con RA ni con RV.</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-5 rv d2">
+        <div class="relative w-[92px] h-[92px] rounded-full bg-[#0B0A12] border-4 border-fuchsia-400 flex items-center justify-center mx-auto"><i data-lucide="rotate-3d" class="w-10 h-10 text-fuchsia-300"></i></div>
+        <div class="glass p-8 flex flex-col gap-3 h-[300px]">
+          <div class="t-kick !text-[15px] text-fuchsia-300">Simón · Usa</div>
+          <h3 class="t-h3">Ruinas de Egipto en 360°</h3>
+          <p class="t-body">Proyectó los videos y los recorrió con el <i>mouse</i>, sin visores. También usó códigos QR en clase.</p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-5 rv d3">
+        <div class="relative w-[92px] h-[92px] rounded-full bg-[#0B0A12] border-4 border-cyan-400 flex items-center justify-center mx-auto"><i data-lucide="magnet" class="w-10 h-10 text-cyan-300"></i></div>
+        <div class="glass p-8 flex flex-col gap-3 h-[300px]">
+          <div class="t-kick !text-[15px] text-cyan-300">Jonathan · Usa con sentido</div>
+          <h3 class="t-h3"><i>Magna-AR</i> en Física</h3>
+          <p class="t-body">Con la cámara y la brújula del celular, el grupo vio los campos magnéticos en vectores y microteslas.</p>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-[1.3fr_1fr] gap-8 mt-auto">
+      <div class="glass px-9 py-7 flex items-center gap-6 rv d4 !border-cyan-400/35">
+        <span class="qmark g-cyan !text-[90px]">“</span>
+        <div><p class="t-quote !text-[24px]">Se podía ver fenómenos que por ahí es difícil de visualizar.</p><p class="cite text-cyan-300 mt-2 !text-[16px]">Jonathan · con estudiantes no alfabetizadas</p></div>
+      </div>
+      <div class="rounded-[30px] bg-gradient-to-br from-fuchsia-600/25 via-purple-700/20 to-cyan-600/20 border-2 border-fuchsia-400/45 px-9 py-7 rv d5">
+        <div class="flex items-center gap-3 t-kick !text-[15px] text-fuchsia-200"><i data-lucide="sparkles" class="w-5 h-5"></i> Hallazgo 2</div>
+        <p class="t-h4 !text-[24px] mt-2">Lo que funcionó no necesitó visores: bastaron el <span class="g-gold">celular</span> y el <span class="g-gold">proyector</span>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5 · ¿QUÉ POSIBILIDADES? ============ -->
+  <section class="slide flex-col gap-10" data-title="¿Qué posibilidades?">
+    <div class="rv">
+      <span class="chip bg-emerald-500/15 border border-emerald-500/40 text-emerald-200"><span class="gs">03</span> Posibilidades</span>
+      <h2 class="t-h1 mt-5">Hacer <span class="g-emer">visible lo que no se ve</span></h2>
+    </div>
+    <div class="grid grid-cols-3 gap-6 rv d1">
+      <div class="glass !rounded-2xl px-7 py-5 flex items-center gap-5"><div class="ico !w-14 !h-14 bg-emerald-500/20 text-emerald-300"><i data-lucide="apple"></i></div><div><div class="t-h4 !text-[22px]">Bolo alimenticio · fracciones</div><div class="t-sm !text-[17px]">Primaria · Alejandra</div></div></div>
+      <div class="glass !rounded-2xl px-7 py-5 flex items-center gap-5"><div class="ico !w-14 !h-14 bg-cyan-500/20 text-cyan-300"><i data-lucide="audio-waveform"></i></div><div><div class="t-h4 !text-[22px]">Ondas · magnetismo · astros</div><div class="t-sm !text-[17px]">Física · Jonathan</div></div></div>
+      <div class="glass !rounded-2xl px-7 py-5 flex items-center gap-5"><div class="ico !w-14 !h-14 bg-fuchsia-500/20 text-fuchsia-300"><i data-lucide="landmark"></i></div><div><div class="t-h4 !text-[22px]">Escenarios del pasado</div><div class="t-sm !text-[17px]">Historia · Simón</div></div></div>
+    </div>
+    <div class="grid grid-cols-3 gap-8 flex-1">
+      <div class="glass p-9 flex flex-col gap-4 rv d2">
+        <div class="ico bg-sky-500/20 text-sky-300"><i data-lucide="accessibility"></i></div>
+        <h3 class="t-h3">Inclusión</h3>
+        <p class="t-body">Lo visual abre una vía de acceso para quienes aún no leen o no aprenden fácilmente con el libro de texto.</p>
+      </div>
+      <div class="glass p-9 flex flex-col gap-4 rv d3">
+        <div class="ico bg-violet-500/20 text-violet-300"><i data-lucide="flask-conical"></i></div>
+        <h3 class="t-h3">Aprendizaje activo</h3>
+        <p class="t-body">Explorar, modificar variables, aprender por ensayo y error y colaborar entre pares.</p>
+      </div>
+      <div class="glass p-9 flex flex-col gap-4 rv d4 !border-amber-400/35">
+        <div class="ico bg-amber-500/20 text-amber-300"><i data-lucide="flame"></i></div>
+        <h3 class="t-h3">Motivación… <span class="g-gold">condicional</span></h3>
+        <p class="t-quote !text-[21px]">«Siempre y cuando el docente las utilice bien».</p>
+        <p class="cite text-amber-300 !text-[15px]">Simón · Historia</p>
+      </div>
+    </div>
+    <div class="rounded-[26px] bg-gradient-to-r from-emerald-600/20 via-cyan-700/15 to-purple-600/20 border-2 border-emerald-400/40 px-9 py-5 flex items-center gap-5 rv d5">
+      <i data-lucide="sparkles" class="w-7 h-7 text-emerald-300 flex-shrink-0"></i>
+      <p class="t-h4 !text-[24px]"><span class="t-kick !text-[15px] text-emerald-200 mr-3">Hallazgo 3</span>El potencial responde a una necesidad didáctica de cada disciplina, no a lo espectacular de la tecnología.</p>
+    </div>
+  </section>
+
+  <!-- ============ 6 · ¿QUÉ DIFICULTADES? ============ -->
+  <section class="slide items-center gap-16" data-title="¿Qué dificultades?">
+    <div class="flex-1 flex flex-col gap-8">
+      <span class="chip self-start bg-rose-500/15 border border-rose-500/40 text-rose-200 rv"><span class="gs">04</span> Dificultades</span>
+      <h2 class="t-hero !text-[96px] rv d1">No es el aparato.<br><span class="g-rose">Es el tiempo.</span></h2>
+      <div class="glass p-9 max-w-[960px] rv d2 !border-rose-400/40">
+        <span class="qmark g-rose">“</span>
+        <p class="t-quote -mt-4 !text-[30px]">Hago lo mínimo indispensable porque tengo una vida aparte.</p>
+        <p class="cite text-rose-300 mt-4">Simón · trabaja en varias instituciones</p>
+      </div>
+      <div class="rounded-[26px] bg-gradient-to-r from-rose-600/20 via-purple-700/15 to-amber-600/15 border-2 border-rose-400/40 px-8 py-5 max-w-[960px] rv d4">
+        <p class="t-h4 !text-[23px]"><span class="t-kick !text-[15px] text-rose-200 mr-3">Hallazgo 4</span>Las barreras son estructurales y laborales, no individuales.</p>
+      </div>
+    </div>
+    <div class="w-[640px] flex-shrink-0 flex flex-col gap-5">
+      <div class="glass p-7 flex items-center gap-6 rv d2 !border-amber-400/50 !bg-amber-500/10">
+        <div class="ico bg-amber-500/25 text-amber-300"><i data-lucide="hourglass"></i></div>
+        <div><div class="t-h4">Tiempo para planificar y diseñar</div><div class="t-sm !text-[17px]">Señalado por los tres · barrera principal</div></div>
+      </div>
+      <div class="glass p-7 flex items-center gap-6 rv d3">
+        <div class="ico bg-rose-500/20 text-rose-300"><i data-lucide="route"></i></div>
+        <div><div class="t-h4">Fragmentación laboral</div><div class="t-sm !text-[17px]">Varias instituciones y exigencias burocráticas</div></div>
+      </div>
+      <div class="glass p-7 flex items-center gap-6 rv d4">
+        <div class="ico bg-purple-500/20 text-purple-300"><i data-lucide="party-popper"></i></div>
+        <div><div class="t-h4">Quedarse en la novedad</div><div class="t-sm !text-[17px]">«No es educar, es vender y entretener»</div></div>
+      </div>
+      <div class="glass p-7 flex items-center gap-6 rv d5">
+        <div class="ico bg-slate-500/20 text-slate-300"><i data-lucide="wifi-off"></i></div>
+        <div><div class="t-h4">Conectividad y pocos equipos</div><div class="t-sm !text-[17px]">Videos descargados de antemano · acceso desigual</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7 · ¿QUÉ CONDICIONES? ============ -->
+  <section class="slide flex-col gap-10" data-title="¿Qué condiciones?">
+    <div class="rv">
+      <span class="chip bg-amber-500/15 border border-amber-500/40 text-amber-200"><span class="gs">05</span> Condiciones necesarias</span>
+      <h2 class="t-h1 mt-5">No piden más tecnología: <span class="g-gold">piden condiciones</span></h2>
+    </div>
+    <div class="grid grid-cols-3 gap-8 flex-1">
+      <div class="glass p-10 flex flex-col gap-5 border-t-[6px] !border-t-amber-400 rv d1">
+        <div class="flex items-center justify-between"><div class="ico bg-amber-500/20 text-amber-300"><i data-lucide="users-round"></i></div><span class="num bg-amber-500/15 text-amber-300">1</span></div>
+        <h3 class="t-h3">Formación situada</h3>
+        <p class="t-body">Talleres prácticos <b class="text-white">dentro de la jornada laboral</b>, compartidos entre docentes paralelos. No cursos virtuales aislados que exigen tiempo extra.</p>
+        <p class="cite text-amber-300 mt-auto !text-[15px]">Alejandra · Simón</p>
+      </div>
+      <div class="glass p-10 flex flex-col gap-5 border-t-[6px] !border-t-fuchsia-400 rv d2">
+        <div class="flex items-center justify-between"><div class="ico bg-fuchsia-500/20 text-fuchsia-300"><i data-lucide="target"></i></div><span class="num bg-fuchsia-500/15 text-fuchsia-300">2</span></div>
+        <h3 class="t-h3">Intención didáctica</h3>
+        <p class="t-body">Objetivos claros, orientar <b class="text-white">qué observar</b>, vincular con los contenidos y no dejar que el recurso decida solo.</p>
+        <p class="cite text-fuchsia-300 mt-auto !text-[15px]">Jonathan · Alejandra</p>
+      </div>
+      <div class="glass p-10 flex flex-col gap-5 border-t-[6px] !border-t-cyan-400 rv d3">
+        <div class="flex items-center justify-between"><div class="ico bg-cyan-500/20 text-cyan-300"><i data-lucide="smartphone"></i></div><span class="num bg-cyan-500/15 text-cyan-300">3</span></div>
+        <h3 class="t-h3">Lo que ya está en el aula</h3>
+        <p class="t-body">El <b class="text-white">celular</b> de los estudiantes para la RA y los <b class="text-white">televisores</b> conectables por cable.</p>
+        <p class="cite text-cyan-300 mt-auto !text-[15px]">Jonathan</p>
+      </div>
+    </div>
+    <div class="glass px-9 py-6 flex items-center gap-6 rv d4">
+      <i data-lucide="map-pin" class="w-7 h-7 text-sky-300 flex-shrink-0"></i>
+      <p class="t-quote !text-[23px]">«No están las condiciones todavía dadas para eso, por lo menos en Argentina». <span class="cite not-italic text-sky-300 ml-3 !text-[15px]">Simón</span></p>
+    </div>
+  </section>
+
+  <!-- ============ 8 · COINCIDENCIAS Y DIFERENCIAS ============ -->
+  <section class="slide flex-col gap-10" data-title="Coincidencias y diferencias">
+    <div class="rv">
+      <span class="chip bg-sky-500/15 border border-sky-500/40 text-sky-200"><span class="gs">06</span> Coincidencias y diferencias</span>
+      <h2 class="t-h1 mt-5">Tres momentos de <span class="g-violet">un mismo camino</span></h2>
+    </div>
+    <div class="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-stretch gap-6 flex-1">
+      <div class="glass p-9 flex flex-col gap-4 rv d1">
+        <div class="avatar bg-emerald-500/20 text-emerald-300">AG</div>
+        <div class="t-kick !text-[16px] text-emerald-300">Conocer</div>
+        <h3 class="t-h3">Concepto sin práctica</h3>
+        <p class="t-body">Distingue RA y RV con claridad, pero todavía no las llevó al aula.</p>
+      </div>
+      <div class="flex items-center rv d2"><i data-lucide="chevron-right" class="w-12 h-12 text-white/30"></i></div>
+      <div class="glass p-9 flex flex-col gap-4 rv d2">
+        <div class="avatar bg-fuchsia-500/20 text-fuchsia-300">SM</div>
+        <div class="t-kick !text-[16px] text-fuchsia-300">Usar</div>
+        <h3 class="t-h3">Práctica sin concepto</h3>
+        <p class="t-body">Usa QR y videos 360° sin nombrarlos como RA o RV. Su mirada es crítica.</p>
+      </div>
+      <div class="flex items-center rv d3"><i data-lucide="chevron-right" class="w-12 h-12 text-white/30"></i></div>
+      <div class="glass p-9 flex flex-col gap-4 rv d3 !border-cyan-400/45">
+        <div class="avatar bg-cyan-500/20 text-cyan-300">JH</div>
+        <div class="t-kick !text-[16px] text-cyan-300">Usar con sentido</div>
+        <h3 class="t-h3">Práctica situada y consciente</h3>
+        <p class="t-body">Elige la herramienta según el concepto que necesita hacer visible.</p>
+      </div>
+    </div>
+    <div class="grid grid-cols-[1fr_1.2fr] gap-8">
+      <div class="glass px-9 py-6 flex items-center gap-5 rv d4">
+        <i data-lucide="link" class="w-7 h-7 text-purple-300 flex-shrink-0"></i>
+        <p class="t-body !text-white"><b class="gs">Coinciden en algo:</b> el sentido pedagógico va antes que la novedad.</p>
+      </div>
+      <div class="rounded-[26px] bg-gradient-to-r from-fuchsia-600/25 via-purple-700/20 to-cyan-600/20 border-2 border-fuchsia-400/45 px-9 py-6 flex items-center gap-5 rv d5">
+        <i data-lucide="sparkles" class="w-7 h-7 text-fuchsia-300 flex-shrink-0"></i>
+        <p class="t-h4 !text-[23px]"><span class="t-kick !text-[15px] text-fuchsia-200 mr-3">Hallazgo 5</span>La formación no debería ser uniforme: tiene que partir de donde está cada docente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 9 · MURAL DEL DIAGNÓSTICO ============ -->
+  <section class="slide flex-col gap-7" data-title="Mural del diagnóstico">
+    <div class="flex items-end justify-between rv">
+      <div>
+        <span class="chip bg-fuchsia-500/15 border border-fuchsia-500/40 text-fuchsia-200"><i data-lucide="layout-grid" class="w-5 h-5"></i> Diagnóstico visual</span>
+        <h2 class="t-h1 mt-4 !text-[54px]">El diagnóstico <span class="g-violet">en un vistazo</span></h2>
+      </div>
+      <p class="t-sm flex items-center gap-2"><i data-lucide="mouse-pointer-click" class="w-5 h-5 text-purple-300"></i> Pasá el mouse o hacé clic en cada panel para ver la cita</p>
+    </div>
+    <div class="grid grid-cols-3 grid-rows-2 gap-6 flex-1">
+      <div class="panel glass p-7 flex flex-col gap-3 rv d1">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-purple-500/20 text-purple-300"><i data-lucide="brain"></i></div><h3 class="t-h4">¿Qué saben?</h3></div>
+        <p class="t-body !text-[20px]">Dos distinguen RA y RV con claridad. Uno asocia la RV con «estar dentro de la web» y no conoce la RA.</p>
+        <p class="pq t-quote !text-[19px] text-cyan-200">«Una complementa la realidad, mientras que la otra usa ya un entorno virtual». — Jonathan</p>
+      </div>
+      <div class="panel glass p-7 flex flex-col gap-3 rv d2">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-cyan-500/20 text-cyan-300"><i data-lucide="history"></i></div><h3 class="t-h4">¿Qué experiencias tienen?</h3></div>
+        <p class="t-body !text-[20px]"><i>Magna-AR</i> para ver campos magnéticos y videos 360° de Egipto con el <i>mouse</i>. Una docente solo las conoce por talleres.</p>
+        <p class="pq t-quote !text-[19px] text-cyan-200">«Se podía ver fenómenos que por ahí es difícil de visualizar». — Jonathan</p>
+      </div>
+      <div class="panel glass p-7 flex flex-col gap-3 rv d3">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-emerald-500/20 text-emerald-300"><i data-lucide="eye"></i></div><h3 class="t-h4">¿Qué posibilidades ven?</h3></div>
+        <p class="t-body !text-[20px]">Hacer visible lo abstracto, incluir a quienes no leen y aprender explorando, por ensayo y error.</p>
+        <p class="pq t-quote !text-[19px] text-emerald-200">«Tienen la oportunidad de generar una motivación extrínseca, siempre y cuando el docente las utilice bien». — Simón</p>
+      </div>
+      <div class="panel glass p-7 flex flex-col gap-3 rv d4">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-rose-500/20 text-rose-300"><i data-lucide="hourglass"></i></div><h3 class="t-h4">¿Qué dificultades señalan?</h3></div>
+        <p class="t-body !text-[20px]">Sobre todo el tiempo. También la fragmentación laboral, la conectividad y el riesgo de quedarse en la novedad.</p>
+        <p class="pq t-quote !text-[19px] text-rose-200">«Hago lo mínimo indispensable porque tengo una vida aparte». — Simón</p>
+      </div>
+      <div class="panel glass p-7 flex flex-col gap-3 rv d5">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-amber-500/20 text-amber-300"><i data-lucide="key-round"></i></div><h3 class="t-h4">¿Qué condiciones piden?</h3></div>
+        <p class="t-body !text-[20px]">Formación situada en la jornada laboral, intención didáctica clara y aprovechar el celular y el televisor.</p>
+        <p class="pq t-quote !text-[19px] text-amber-200">«Uno tiene […] el deber […] de profanar ese sentido inicial y poder llevarlo a la educación». — Simón</p>
+      </div>
+      <div class="panel glass p-7 flex flex-col gap-3 rv d6">
+        <div class="flex items-center gap-4"><div class="ico !w-12 !h-12 !rounded-xl bg-sky-500/20 text-sky-300"><i data-lucide="git-compare"></i></div><h3 class="t-h4">Coincidencias y diferencias</h3></div>
+        <p class="t-body !text-[20px]">Coinciden: el sentido pedagógico va antes que la novedad. Difieren: conocer, usar, usar con sentido.</p>
+        <p class="pq t-quote !text-[19px] text-sky-200">Concepto sin práctica · práctica sin concepto · práctica situada y consciente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 10 · PROFANAR + SÍNTESIS ============ -->
+  <section class="slide items-center gap-16" data-title="Conclusión">
+    <div class="flex-1 flex flex-col gap-8">
+      <span class="chip self-start bg-fuchsia-500/15 border border-fuchsia-500/40 text-fuchsia-200 rv"><i data-lucide="flag" class="w-5 h-5"></i> Conclusión</span>
+      <h2 class="t-hero !text-[78px] rv d1">El potencial está reconocido.<br><span class="g-violet">Faltan condiciones.</span></h2>
+      <div class="grid grid-cols-3 gap-5 max-w-[1000px] rv d2">
+        <div class="glass !rounded-2xl px-6 py-5 flex items-center gap-4"><i data-lucide="hourglass" class="w-8 h-8 text-amber-300"></i><span class="t-h4 !text-[22px]">Tiempo</span></div>
+        <div class="glass !rounded-2xl px-6 py-5 flex items-center gap-4"><i data-lucide="users-round" class="w-8 h-8 text-emerald-300"></i><span class="t-h4 !text-[22px]">Formación situada</span></div>
+        <div class="glass !rounded-2xl px-6 py-5 flex items-center gap-4"><i data-lucide="target" class="w-8 h-8 text-fuchsia-300"></i><span class="t-h4 !text-[22px]">Intención didáctica</span></div>
+      </div>
+      <p class="t-lead max-w-[1000px] rv d3">Incorporar RA y RV no es un problema de acceso tecnológico, sino de <b class="text-white">apropiación pedagógica</b>. La puerta de entrada más realista es el <b class="text-white">celular</b>, no el visor.</p>
+    </div>
+    <div class="w-[680px] flex-shrink-0 flex flex-col gap-6">
+      <div class="glass p-9 rv d2 !border-fuchsia-400/45">
+        <span class="qmark g-violet">“</span>
+        <p class="t-quote -mt-4 !text-[25px]">No es educar, es vender y entretener. Entonces uno tiene […] el deber […] de <b class="not-italic gs text-fuchsia-200">profanar</b> ese sentido inicial y poder llevarlo a la educación.</p>
+        <p class="cite text-fuchsia-300 mt-4">Simón · Historia</p>
+      </div>
+      <div class="glass p-9 rv d4 !border-cyan-400/40">
+        <div class="t-kick !text-[15px] text-cyan-300 flex items-center gap-2"><i data-lucide="book-marked" class="w-5 h-5"></i> En diálogo con Kap</div>
+        <p class="t-body !text-[21px] mt-3 !text-slate-100">«Profanar […] los dispositivos y las plataformas y “restituirlos al uso común de aquello que fue tomado y separado en ellos”».</p>
+        <p class="t-sm mt-3 !text-[16px]">Kap (2020, p. 98), a partir de Agamben · véase también Kap (2025)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 11 · CIERRE ============ -->
+  <section class="slide flex-col items-center justify-center text-center gap-9" data-title="Gracias">
+    <span class="chip bg-purple-500/15 border border-purple-500/40 text-purple-200 rv"><i data-lucide="message-circle-question" class="w-5 h-5"></i> Para seguir pensando</span>
+    <h2 class="t-hero !text-[80px] max-w-[1500px] rv d1">¿Qué haría falta en <span class="g-cyan">tu institución</span> para pasar de <span class="g-violet">conocer</span> a <span class="g-gold">usar con sentido</span>?</h2>
+    <p class="t-lead rv d2">Gracias · <b class="text-white">Luciana Baumann</b> (Argentina) · <b class="text-white">Oscar Javier Rojas</b> (Colombia)</p>
+    <div class="glass !rounded-2xl px-8 py-5 max-w-[1500px] text-left rv d3">
+      <p class="t-sm !text-[16px] leading-relaxed"><b class="text-slate-300 gs">Referencias:</b> Alaminos, A. (2006). La dinámica de la interacción. Universidad de Alicante · Díaz-Bravo, L. et al. (2013). La entrevista, recurso flexible y dinámico. <i>Investigación en Educación Médica, 2</i>(7) · Florit, A. (2022). <i>Entrevistas TIC</i>. Fundació BIT · Kap, M. (2020). Una didáctica transmedia. <i>Revista Argentina de Comunicación, 8</i>(11), 82–109 · Kap, M. (2025). Hacia una Didáctica Generativa. <i>Itinerarios Educativos</i>, (23), e0101 · Portero Aylagas, M. (2025). Innovación educativa en el aula: realidad aumentada y virtual. <i>Magisterio</i>.</p>
+      <p class="t-sm !text-[15px] mt-2 text-slate-500">Limitaciones: muestra de tres docentes, todas las personas entrevistadas en modalidad presencial y la pregunta 4 omitida en dos entrevistas (sus temas surgieron igual en las respuestas). Elaboración propia, noviembre de 2026.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER / NAVEGACIÓN -->
+  <footer id="ftr">
+    <div class="flex items-center gap-3 t-sm !text-[17px]"><i data-lucide="keyboard" class="w-5 h-5"></i> <span>◀ ▶ · Espacio · F pantalla completa</span><span class="mx-2 text-white/20">|</span><span id="stitle" class="gs font-bold text-purple-300"></span></div>
+    <div class="flex items-center gap-6">
+      <button id="prev" class="navbtn" aria-label="Anterior"><i data-lucide="chevron-left" class="w-8 h-8"></i></button>
+      <div id="dots" class="flex items-center gap-2.5"></div>
+      <button id="next" class="navbtn" aria-label="Siguiente"><i data-lucide="chevron-right" class="w-8 h-8"></i></button>
+    </div>
+    <div class="flex items-center gap-3 t-sm !text-[17px]">MEED · Recursos Digitales II · 2026</div>
+  </footer>
+  <div id="progress"></div>
+</div>
+
+<script>
+  const slides = [...document.querySelectorAll('.slide')];
+  const N = slides.length;
+  const params = new URLSearchParams(location.search);
+  let cur = Math.min(N - 1, Math.max(0, (+params.get('s') || 1) - 1));
+  const dots = document.getElementById('dots');
+  slides.forEach((s, i) => { const d = document.createElement('span'); d.className = 'dot'; d.onclick = () => go(i); dots.appendChild(d); });
+
+  // Marca impresa en cada lámina (solo PDF)
+  const brand = `<div class="print-brand"><div class="flex items-center gap-5"><div class="w-[60px] h-[60px] rounded-[18px] bg-gradient-to-tr from-fuchsia-600 via-purple-600 to-cyan-500"></div><div><div class="gs font-extrabold text-[28px] leading-none">RA &amp; RV en el aula</div><div class="t-kick !text-[15px] text-fuchsia-400 mt-1.5">MEED · Baumann &amp; Rojas</div></div></div><span class="gs font-bold text-[21px] tracking-widest text-purple-200">__N__ / ${String(N).padStart(2,'0')}</span></div>`;
+  slides.forEach((s, i) => s.insertAdjacentHTML('afterbegin', brand.replace('__N__', String(i + 1).padStart(2, '0'))));
+
+  // Paneles del mural: clic para fijar la cita (útil en pantallas táctiles)
+  document.querySelectorAll('.panel').forEach(p => p.addEventListener('click', () => p.classList.toggle('open')));
+
+  function go(i) {
+    cur = Math.max(0, Math.min(N - 1, i));
+    slides.forEach((s, k) => s.classList.toggle('active', k === cur));
+    [...dots.children].forEach((d, k) => d.classList.toggle('on', k === cur));
+    document.getElementById('counter').textContent = `${String(cur + 1).padStart(2, '0')} / ${String(N).padStart(2, '0')}`;
+    document.getElementById('stitle').textContent = slides[cur].dataset.title;
+    document.getElementById('progress').style.width = ((cur + 1) / N * 100) + '%';
+    document.getElementById('prev').style.opacity = cur === 0 ? .3 : 1;
+    document.getElementById('next').style.opacity = cur === N - 1 ? .3 : 1;
+    history.replaceState(null, '', '?s=' + (cur + 1));
+  }
+  function fit() {
+    const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    document.getElementById('stage').style.transform = `translate(-50%,-50%) scale(${k})`;
+  }
+  document.getElementById('prev').onclick = () => go(cur - 1);
+  document.getElementById('next').onclick = () => go(cur + 1);
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(cur + 1); }
+    if (['ArrowLeft', 'PageUp'].includes(e.key)) go(cur - 1);
+    if (e.key === 'Home') go(0); if (e.key === 'End') go(N - 1);
+    if (e.key.toLowerCase() === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+  });
+  // Navegación táctil (swipe)
+  let tx = null;
+  addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive:true });
+  addEventListener('touchend', e => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1)); tx = null; });
+  addEventListener('resize', fit);
+  window.addEventListener('beforeprint', () => document.getElementById('stage').style.transform = 'none');
+  window.addEventListener('afterprint', fit);
+  lucide.createIcons(); fit(); go(cur);
+</script>
+</body>
+</html>
